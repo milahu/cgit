@@ -1,0 +1,79 @@
+.Dd February 13, 2022
+.Dt INDEX 7
+.Os "Causal Agency"
+.
+.Sh NAME
+.Nm cgit-pink
+.Nd web frontend for git
+.
+.Sh DESCRIPTION
+.Nm
+is a fork of
+.Nm cgit .
+.
+.Ss Quick Facts
+.Bl -bullet -compact
+.It
+web interface (CGI) for git repositories, written in C
+.It
+licensed under GPLv2
+.It
+discussions, patches, etc. go to
+.Aq Mt list+cgit@causal.agency
+.Pq Lk https://causal.agency/list/cgit.html archive
+.It
+real time chat available in
+.Li #ascii.town
+on
+.Li tilde.chat
+.It
+common questions are answered in the
+.Xr faq 7
+.El
+.
+.Ss Features
+.Bl -bullet -compact
+.It
+basic repository browsing (logs, diffs, trees...)
+.It
+caching of generated HTML
+.It
+cloneable URLs (implements dumb HTTP transport)
+.It
+commit feeds (atom format)
+.It
+discovery of git repositories
+.It
+on-the-fly archives for tags and commits
+.It
+plugin support for syntax highlighting
+.It
+side-by-side diffs
+.It
+simple time/author statistics
+.It
+simple virtual hosting support (macro expansion)
+.It
+understands GitWeb project-lists
+.It
+understands
+.Cm gitweb.owner
+in git config files
+.El
+.
+.Ss Source Code
+.Bl -bullet -compact
+.It
+download current or past
+.Lk /cgit-pink/refs/tags releases
+.It
+clone the repo:
+.Dl git clone https://git.causal.agency/cgit-pink
+.It
+see the
+.Lk /cgit-pink/tree/README README
+for build instructions
+.El
+.
+.Ss Packages
+None yet...
