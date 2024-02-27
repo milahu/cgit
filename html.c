@@ -169,10 +169,13 @@ void html_attrf(const char *fmt, ...)
 
 void html_attr(const char *txt)
 {
+	// NOTE: this is optimized for attributes in single quotes
+	// <div title='some title'></div>
+	// check: grep -w html_attr *.c -B1 | grep '=\\"'
 	const char *t = txt;
 	while (t && *t) {
 		int c = *t;
-		if (c == '<' || c == '>' || c == '\'' || c == '\"' || c == '&') {
+		if (c == '<' || c == '>' || c == '\'' || c == '&') {
 			html_raw(txt, t - txt);
 			if (c == '>')
 				html("&gt;");
@@ -180,8 +183,6 @@ void html_attr(const char *txt)
 				html("&lt;");
 			else if (c == '\'')
 				html("&#x27;");
-			else if (c == '"')
-				html("&quot;");
 			else if (c == '&')
 				html("&amp;");
 			txt = t + 1;
