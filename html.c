@@ -139,11 +139,9 @@ ssize_t html_ntxt(const char *txt, size_t len)
 	slen = (ssize_t) len;
 	while (t && *t && slen--) {
 		int c = *t;
-		if (c == '<' || c == '>' || c == '&') {
+		if (c == '<' || c == '&') {
 			html_raw(txt, t - txt);
-			if (c == '>')
-				html("&gt;");
-			else if (c == '<')
+			if (c == '<')
 				html("&lt;");
 			else if (c == '&')
 				html("&amp;");
