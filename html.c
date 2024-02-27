@@ -182,7 +182,7 @@ void html_attr(const char *txt)
 			else if (c == '<')
 				html("&lt;");
 			else if (c == '\'')
-				html("&#x27;");
+				html("&#39;");
 			else if (c == '&')
 				html("&amp;");
 			txt = t + 1;
