@@ -4,8 +4,6 @@
 
 #include <git-compat-util.h>
 #include <stdbool.h>
-
-#include <cache.h>
 #include <grep.h>
 #include <object.h>
 #include <object-store.h>
@@ -26,10 +24,39 @@
 #include <notes.h>
 #include <graph.h>
 #include <inttypes.h>
+#include <setup.h>
+#include <object-name.h>
+#include <hex.h>
+#include <environment.h>
+#include <path.h>
 
 /* Add isgraph(x) to Git's sane ctype support (see git-compat-util.h) */
 #undef isgraph
 #define isgraph(x) (isprint((x)) && !isspace((x)))
+
+// based on git/cache.h
+#define get_oid(str, oid) repo_get_oid(the_repository, str, oid)
+#define find_unique_abbrev(oid, len) repo_find_unique_abbrev(the_repository, oid, len)
+
+// based on git/object-store.h
+#define read_object_file(oid, type, size) repo_read_object_file(the_repository, oid, type, size)
+
+// based on git/diff.h
+#define diff_setup(diffopts) repo_diff_setup(the_repository, diffopts)
+
+// based on git/revision.h
+#define init_revisions(revs, prefix) repo_init_revisions(the_repository, revs, prefix)
+
+// based on commit.h
+#define parse_commit(item) repo_parse_commit(the_repository, item)
+
+// strtok_r is banned from the git codebase
+// use hidden __strtok_r from glibc
+// https://github.com/bminor/glibc/blob/master/string/strtok_r.c
+#ifdef strtok_r
+#undef strtok_r
+#endif
+#define strtok_r __strtok_r
 
 
 /*
