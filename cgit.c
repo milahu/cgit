@@ -381,7 +381,7 @@ static void prepare_context(void)
 	ctx.cfg.branch_sort = 0;
 	ctx.cfg.commit_sort = 0;
 	ctx.cfg.logo = "/cgit.png";
-	ctx.cfg.favicon = "/favicon.ico";
+	ctx.cfg.favicon = NULL;
 	ctx.cfg.local_time = 0;
 	ctx.cfg.enable_http_clone = 1;
 	ctx.cfg.enable_index_owner = 1;
@@ -679,7 +679,7 @@ static inline void authenticate_post(void)
 		len = MAX_AUTHENTICATION_POST_BYTES;
 	if ((len = read(STDIN_FILENO, buffer, len)) < 0)
 		die_errno("Could not read POST from stdin");
-	if (write(STDOUT_FILENO, buffer, len) < 0)
+	if (fwrite(buffer, 1, len, stdout) < len)
 		die_errno("Could not write POST to stdout");
 	cgit_close_filter(ctx.cfg.auth_filter);
 	exit(0);
@@ -968,13 +968,7 @@ static void cgit_parse_args(int argc, const char **argv)
 
 	for (i = 1; i < argc; i++) {
 		if (!strcmp(argv[i], "--version")) {
-			printf("CGit %s | https://git.zx2c4.com/cgit/\n\nCompiled in features:\n", CGIT_VERSION);
-#ifdef NO_LUA
-			printf("[-] ");
-#else
-			printf("[+] ");
-#endif
-			printf("Lua scripting\n");
+			printf("CGit-pink %s | https://git.causal.agency/cgit-pink/\n\nCompiled in features:\n", CGIT_VERSION);
 #ifndef HAVE_LINUX_SENDFILE
 			printf("[-] ");
 #else
@@ -1056,7 +1050,6 @@ int cmd_main(int argc, const char **argv)
 	const char *path;
 	int err, ttl;
 
-	cgit_init_filters();
 	atexit(cgit_cleanup_filters);
 
 	prepare_context();

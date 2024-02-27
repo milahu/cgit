@@ -75,7 +75,7 @@ div#cgit table.tabs td {
 }
 
 div#cgit table.tabs td a {
-	padding: 2px 0.75em;
+	padding: 2px 0.25em;
 	color: #777;
 	font-size: 110%;
 }
@@ -441,11 +441,6 @@ div#cgit div.commit-subject {
 	padding: 0em;
 }
 
-div#cgit div.commit-msg {
-	white-space: pre;
-	font-family: monospace;
-}
-
 div#cgit div.notes-header {
 	font-weight: bold;
 	padding-top: 1.5em;
@@ -542,26 +537,20 @@ div#cgit table.diff {
 	width: 100%;
 }
 
-div#cgit table.diff td {
-	font-family: monospace;
-	white-space: pre;
-}
-
-div#cgit table.diff td div.head {
+div#cgit table.diff td span.head {
 	font-weight: bold;
-	margin-top: 1em;
 	color: black;
 }
 
-div#cgit table.diff td div.hunk {
+div#cgit table.diff td span.hunk {
 	color: #009;
 }
 
-div#cgit table.diff td div.add {
+div#cgit table.diff td span.add {
 	color: green;
 }
 
-div#cgit table.diff td div.del {
+div#cgit table.diff td span.del {
 	color: red;
 }
 
@@ -585,7 +574,6 @@ div#cgit table.list td.reposection {
 
 div#cgit a.button {
 	font-size: 80%;
-	padding: 0em 0.5em;
 }
 
 div#cgit a.primary {
@@ -675,7 +663,6 @@ div#cgit div.footer a:hover {
 
 div#cgit a.branch-deco {
 	color: #000;
-	margin: 0px 0.5em;
 	padding: 0px 0.25em;
 	background-color: #88ff88;
 	border: solid 1px #007700;
@@ -683,7 +670,6 @@ div#cgit a.branch-deco {
 
 div#cgit a.tag-deco {
 	color: #000;
-	margin: 0px 0.5em;
 	padding: 0px 0.25em;
 	background-color: #ffff88;
 	border: solid 1px #777700;
@@ -691,7 +677,6 @@ div#cgit a.tag-deco {
 
 div#cgit a.tag-annotated-deco {
 	color: #000;
-	margin: 0px 0.5em;
 	padding: 0px 0.25em;
 	background-color: #ffcc88;
 	border: solid 1px #777700;
@@ -699,7 +684,6 @@ div#cgit a.tag-annotated-deco {
 
 div#cgit a.remote-deco {
 	color: #000;
-	margin: 0px 0.5em;
 	padding: 0px 0.25em;
 	background-color: #ccccff;
 	border: solid 1px #000077;
@@ -707,7 +691,6 @@ div#cgit a.remote-deco {
 
 div#cgit a.deco {
 	color: #000;
-	margin: 0px 0.5em;
 	padding: 0px 0.25em;
 	background-color: #ff8888;
 	border: solid 1px #770000;
@@ -718,7 +701,6 @@ div#cgit div.commit-subject a.tag-deco,
 div#cgit div.commit-subject a.tag-annotated-deco,
 div#cgit div.commit-subject a.remote-deco,
 div#cgit div.commit-subject a.deco {
-	margin-left: 1em;
 	font-size: 75%;
 }
 
