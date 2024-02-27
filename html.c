@@ -175,13 +175,9 @@ void html_attr(const char *txt)
 	const char *t = txt;
 	while (t && *t) {
 		int c = *t;
-		if (c == '<' || c == '>' || c == '\'' || c == '&') {
+		if (c == '\'' || c == '&') {
 			html_raw(txt, t - txt);
-			if (c == '>')
-				html("&gt;");
-			else if (c == '<')
-				html("&lt;");
-			else if (c == '\'')
+			if (c == '\'')
 				html("&#39;");
 			else if (c == '&')
 				html("&amp;");
