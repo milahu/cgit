@@ -657,7 +657,13 @@ void cgit_submodule_link(const char *class, char *path, const char *rev)
 		html_txt(path);
 		html("</span>");
 	}
-	html_txtf(" @ %.7s", rev);
+	html(" <span");
+	if (class)
+		htmlf(" class='%s-at'", class);
+	html(">");
+	html_txtf("@ %.7s", rev);
+	html("</span>");
+
 	if (item && tail)
 		path[len - 1] = tail;
 }
