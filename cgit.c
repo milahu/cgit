@@ -380,7 +380,7 @@ static void prepare_context(void)
 	ctx.cfg.case_sensitive_sort = 1;
 	ctx.cfg.branch_sort = 0;
 	ctx.cfg.commit_sort = 0;
-	ctx.cfg.logo = "/cgit.png";
+	ctx.cfg.logo = "/logo.png";
 	ctx.cfg.favicon = NULL;
 	ctx.cfg.local_time = 0;
 	ctx.cfg.enable_http_clone = 1;
