@@ -332,7 +332,7 @@ static void filepair_cb(struct diff_filepair *pair)
 		if (use_ssdiff)
 			html("<tr><td colspan='4'>Binary files differ</td></tr>");
 		else
-			html("Binary files differ");
+			html("Binary files differ<br>");
 	}
 	if (use_ssdiff)
 		cgit_ssdiff_footer();
