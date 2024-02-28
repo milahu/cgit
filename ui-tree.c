@@ -257,6 +257,26 @@ cleanup:
 	return 0;
 }
 
+#if SHOW_DIRECTORIES_FIRST
+static int ls_item_directory(const struct object_id *oid, struct strbuf *base,
+		const char *pathname, unsigned mode, void *cbdata)
+{
+	if (!(S_ISDIR(mode) || S_ISGITLINK(mode))) {
+		return 0;
+	}
+	return ls_item(oid, base, pathname, mode, cbdata);
+}
+
+static int ls_item_file(const struct object_id *oid, struct strbuf *base,
+		const char *pathname, unsigned mode, void *cbdata)
+{
+	if (S_ISDIR(mode) || S_ISGITLINK(mode)) {
+		return 0;
+	}
+	return ls_item(oid, base, pathname, mode, cbdata);
+}
+#endif
+
 static void ls_head(void)
 {
 	cgit_print_layout_start();
@@ -290,7 +310,14 @@ static void ls_tree(const struct object_id *oid, const char *path, struct walk_t
 	}
 
 	ls_head();
+	#if SHOW_DIRECTORIES_FIRST
+	// show directories first
+	read_tree(the_repository, tree, &paths, ls_item_directory, walk_tree_ctx);
+	read_tree(the_repository, tree, &paths, ls_item_file, walk_tree_ctx);
+	#else
+	// dont show directories first
 	read_tree(the_repository, tree, &paths, ls_item, walk_tree_ctx);
+	#endif
 	ls_tail();
 }
 
@@ -299,22 +326,25 @@ static int walk_tree(const struct object_id *oid, struct strbuf *base,
 		const char *pathname, unsigned mode, void *cbdata)
 {
 	struct walk_tree_context *walk_tree_ctx = cbdata;
-
 	if (walk_tree_ctx->state == 0) {
 		struct strbuf buffer = STRBUF_INIT;
-
 		strbuf_addbuf(&buffer, base);
 		strbuf_addstr(&buffer, pathname);
-		if (strcmp(walk_tree_ctx->match_path, buffer.buf))
+		// expected path versus actual path
+		if (strcmp(walk_tree_ctx->match_path, buffer.buf)) {
+			// keep going down
 			return READ_TREE_RECURSIVE;
-
+		}
+		// reached the expected path
 		if (S_ISDIR(mode)) {
+			// path is directory
 			walk_tree_ctx->state = 1;
 			cgit_set_title_from_path(buffer.buf);
 			strbuf_release(&buffer);
 			ls_head();
 			return READ_TREE_RECURSIVE;
 		} else {
+			// path is file or symlink or git module
 			walk_tree_ctx->state = 2;
 			print_object(oid, buffer.buf, pathname, walk_tree_ctx->curr_rev);
 			strbuf_release(&buffer);
@@ -324,6 +354,54 @@ static int walk_tree(const struct object_id *oid, struct strbuf *base,
 	ls_item(oid, base, pathname, mode, walk_tree_ctx);
 	return 0;
 }
+
+#if SHOW_DIRECTORIES_FIRST
+static int walk_tree_directory(const struct object_id *oid, struct strbuf *base,
+		const char *pathname, unsigned mode, void *cbdata)
+{
+	if (!(S_ISDIR(mode) || S_ISGITLINK(mode))) {
+		// dont show files
+		return READ_TREE_RECURSIVE;
+	}
+	return walk_tree(oid, base, pathname, mode, cbdata);
+}
+
+static int walk_tree_file(const struct object_id *oid, struct strbuf *base,
+		const char *pathname, unsigned mode, void *cbdata)
+{
+	struct walk_tree_context *walk_tree_ctx = cbdata;
+
+	if (walk_tree_ctx->state == 0) {
+		struct strbuf buffer = STRBUF_INIT;
+		strbuf_addbuf(&buffer, base);
+		strbuf_addstr(&buffer, pathname);
+		if (strcmp(walk_tree_ctx->match_path, buffer.buf)) {
+			// keep going down
+			return READ_TREE_RECURSIVE;
+		}
+		// reached the expected path
+		if (S_ISDIR(mode)) {
+			walk_tree_ctx->state = 1;
+			cgit_set_title_from_path(buffer.buf);
+			strbuf_release(&buffer);
+			// no, not again
+			//ls_head();
+			return READ_TREE_RECURSIVE;
+		} else {
+			walk_tree_ctx->state = 2;
+			print_object(oid, buffer.buf, pathname, walk_tree_ctx->curr_rev);
+			strbuf_release(&buffer);
+			return 0;
+		}
+	}
+	if (S_ISDIR(mode)) {
+		return 0;
+	}
+	ls_item(oid, base, pathname, mode, walk_tree_ctx);
+	return 0;
+}
+#endif
+
 
 /*
  * Show a tree or a blob
@@ -369,12 +447,26 @@ void cgit_print_tree(const char *rev, char *path)
 		goto cleanup;
 	}
 
+	#if SHOW_DIRECTORIES_FIRST
+	// show directories first
+	read_tree(the_repository, repo_get_commit_tree(the_repository, commit),
+		  &paths, walk_tree_directory, &walk_tree_ctx);
+	// walker can be too deep. restart from root
+	walk_tree_ctx.state = 0;
+	read_tree(the_repository, repo_get_commit_tree(the_repository, commit),
+		  &paths, walk_tree_file, &walk_tree_ctx);
+	#else
+	// dont show directories first
 	read_tree(the_repository, repo_get_commit_tree(the_repository, commit),
 		  &paths, walk_tree, &walk_tree_ctx);
-	if (walk_tree_ctx.state == 1)
+	#endif
+
+	if (walk_tree_ctx.state == 1) {
 		ls_tail();
-	else if (walk_tree_ctx.state == 2)
+	}
+	else if (walk_tree_ctx.state == 2) {
 		cgit_print_layout_end();
+	}
 	else
 		cgit_print_error_page(404, "Not found", "Path not found");
 
