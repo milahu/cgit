@@ -266,7 +266,7 @@ void html_option(const char *value, const char *text, const char *selected_value
 	html_attr(value);
 	html("'");
 	if (selected_value && !strcmp(selected_value, value))
-		html(" selected='selected'");
+		html(" selected");
 	html(">");
 	html_txt(text);
 	html("</option>\n");
@@ -275,7 +275,7 @@ void html_option(const char *value, const char *text, const char *selected_value
 void html_intoption(int value, const char *text, int selected_value)
 {
 	htmlf("<option value='%d'%s>", value,
-	      value == selected_value ? " selected='selected'" : "");
+	      value == selected_value ? " selected" : "");
 	html_txt(text);
 	html("</option>");
 }
