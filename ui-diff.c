@@ -488,6 +488,7 @@ void cgit_print_diff(const char *new_rev, const char *old_rev,
 	if (difftype == DIFF_STATONLY)
 		return;
 
+	// TODO use <pre class=ssdiff>
 	if (use_ssdiff) {
 		html("<table summary='ssdiff' class='ssdiff'>");
 	} else {

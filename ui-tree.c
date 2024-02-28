@@ -19,44 +19,16 @@ struct walk_tree_context {
 
 static void print_text_buffer(const char *name, char *buf, unsigned long size)
 {
-	unsigned long lineno, idx;
-	const char *numberfmt = "<a id='n%1$d' href='#n%1$d'>%1$d</a>\n";
-
-	html("<table summary='blob content' class='blob'>\n");
-
 	if (ctx.cfg.enable_tree_linenumbers) {
-		html("<tr><td class='linenumbers'><pre>");
-		idx = 0;
-		lineno = 0;
-
-		if (size) {
-			htmlf(numberfmt, ++lineno);
-			while (idx < size - 1) { // skip absolute last newline
-				if (buf[idx] == '\n')
-					htmlf(numberfmt, ++lineno);
-				idx++;
-			}
-		}
-		html("</pre></td>\n");
-	}
-	else {
-		html("<tr>\n");
-	}
-
-	if (ctx.repo->source_filter) {
-		char *filter_arg = xstrdup(name);
-		html("<td class='lines'><pre><code>");
-		cgit_open_filter(ctx.repo->source_filter, filter_arg);
-		html_raw(buf, size);
-		cgit_close_filter(ctx.repo->source_filter);
-		free(filter_arg);
-		html("</code></pre></td></tr></table>\n");
+		html("<pre class=blob>");
+		html_ntxt_lines(buf, size);
+		html("</pre>\n");
 		return;
 	}
 
-	html("<td class='lines'><pre><code>");
-	html_txt(buf);
-	html("</code></pre></td></tr></table>\n");
+	html("<pre class=blob>");
+	html_ntxt(buf, size);
+	html("</pre>\n");
 }
 
 #define ROWLEN 32

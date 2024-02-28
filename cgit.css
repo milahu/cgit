@@ -295,37 +295,35 @@ div#cgit td.ls-mode {
 	width: 10em;
 }
 
-div#cgit table.blob {
+div#cgit pre.blob {
 	margin-top: 0.5em;
 	border-top: solid 1px black;
+	padding: 0;
+	margin: 0;
 }
 
-div#cgit table.blob td.hashes,
-div#cgit table.blob td.lines {
-	margin: 0; padding: 0 0 0 0.5em;
-	vertical-align: top;
+div#cgit pre.blob a {
+	color: gray;
+	text-align: right;
+	text-decoration: none;
+	user-select: none;
+	-webkit-user-select: none;
+	display: inline-block;
+	width: 5em;
+	margin-right: 1em;
+}
+
+div#cgit pre.blob a:hover {
 	color: black;
 }
 
-div#cgit table.blob td.linenumbers {
-	margin: 0; padding: 0 0.5em 0 0.5em;
-	vertical-align: top;
-	text-align: right;
-	border-right: 1px solid gray;
-}
-
-div#cgit table.blob pre {
-	padding: 0; margin: 0;
-}
-
-div#cgit table.blob td.linenumbers a,
+/* TODO use <pre class=ssdiff> */
 div#cgit table.ssdiff td.lineno a {
 	color: gray;
 	text-align: right;
 	text-decoration: none;
 }
 
-div#cgit table.blob td.linenumbers a:hover,
 div#cgit table.ssdiff td.lineno a:hover {
 	color: black;
 }

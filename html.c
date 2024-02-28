@@ -154,6 +154,63 @@ ssize_t html_ntxt(const char *txt, size_t len)
 	return slen;
 }
 
+void html_txt_lines(const char *txt)
+{
+	if (txt)
+		html_ntxt_lines(txt, strlen(txt));
+}
+
+ssize_t html_ntxt_lines(const char *txt, size_t len)
+{
+	const char *t = txt;
+	ssize_t slen;
+	unsigned long lineno = 0;
+	const char *numberfmt = "<a id=n%1$d href=#n%1$d>%1$d</a>";
+
+	if (len > SSIZE_MAX)
+		return -1;
+
+	if (len == 0)
+		return 0;
+
+	// first line number
+	htmlf(numberfmt, ++lineno);
+
+	slen = (ssize_t) len;
+	// loop to (slen-- > 1) so there is always a next line
+	while (t && *t && slen-- > 1) {
+		// TODO unsigned char?
+		int c = *t;
+		if (c == '<' || c == '&') {
+			html_raw(txt, t - txt);
+			if (c == '<')
+				html("&lt;");
+			else if (c == '&')
+				html("&amp;");
+			txt = t + 1;
+		}
+		else if (c == '\n') {
+			html_raw(txt, t - txt + 1); // +1 to include '\n'
+			txt = t + 1;
+			htmlf(numberfmt, ++lineno);
+		}
+		t++;
+	}
+	// last char
+	int c = *t;
+	if (c == '<' || c == '&') {
+		html_raw(txt, t - txt);
+		if (c == '<')
+			html("&lt;");
+		else if (c == '&')
+			html("&amp;");
+		txt = t + 1;
+	}
+	if (t != txt)
+		html_raw(txt, t - txt);
+	return slen;
+}
+
 void html_attrf(const char *fmt, ...)
 {
 	va_list ap;
